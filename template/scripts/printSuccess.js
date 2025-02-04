@@ -3,7 +3,7 @@
 module.exports = {
   async success() {
     return new Promise(resolve => {
-      console.log('\\033[2A', `\n Template initialization successful! 🚀`);
+      console.log(`Template initialization successful! 🚀`);
       resolve();
     }).catch(() => {
       throw new Error(
