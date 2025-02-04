@@ -20,8 +20,5 @@
     "jest",
     "template",
     "boilerplate"
-  ],
-  "dependencies": {
-    "chalk": "^5.4.1"
-  }
+  ]
 }
