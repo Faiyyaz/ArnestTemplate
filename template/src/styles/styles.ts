@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {hp} from '../utils/responsive';
 
 const appStyles = StyleSheet.create({
   flexDirectionRow: {
@@ -15,6 +16,19 @@ const appStyles = StyleSheet.create({
 
   flexGrow1: {
     flexGrow: 1,
+  },
+
+  pageContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+
+  marginBottom20: {
+    marginBottom: hp(20),
+  },
+
+  marginTop20: {
+    marginTop: hp(20),
   },
 });
 
