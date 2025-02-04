@@ -1,18 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import RNPButton from '../components/button/RNPButton';
 import appStyles from '../styles/styles';
 import RNPImage from '../components/image/RNPImage';
 import {wp} from '../utils/responsive';
+import RNPBottomSheet from '../components/bottomsheets/RNPBottomSheet';
+import RNPText from '../components/text/RNPText';
 
 export default function HomeScreen() {
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+
   return (
     <View style={appStyles.pageContainer}>
       <RNPButton
         onPress={() => {
-          console.log('Button Pressed');
+          setShowBottomSheet(true);
         }}>
-        Press Me
+        Show Bottom Sheet
       </RNPButton>
       <View style={[appStyles.marginTop20, appStyles.marginBottom20]}>
         <RNPImage
@@ -28,6 +32,15 @@ export default function HomeScreen() {
         }}
         style={styles.imageStyle}
       />
+      <RNPBottomSheet visible={showBottomSheet}>
+        <RNPText>Hello In Bottom Sheet</RNPText>
+        <RNPButton
+          onPress={() => {
+            setShowBottomSheet(false);
+          }}>
+          Close
+        </RNPButton>
+      </RNPBottomSheet>
     </View>
   );
 }

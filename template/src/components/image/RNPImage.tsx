@@ -8,7 +8,7 @@ export default function RNPImage(props: FastImageProps) {
   const [error, setError] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <FastImage
         {...props}
         source={error ? require('../../assets/images/error.png') : props.source}
@@ -20,7 +20,7 @@ export default function RNPImage(props: FastImageProps) {
         }}
       />
       {loading && (
-        <View style={[props.style, styles.loaderContainer]}>
+        <View style={styles.loaderContainer}>
           <ActivityIndicator animating={loading} />
         </View>
       )}
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   loaderContainer: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
