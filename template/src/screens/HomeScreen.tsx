@@ -6,6 +6,11 @@ import RNPImage from '../components/image/RNPImage';
 import {wp} from '../utils/responsive';
 import RNPBottomSheet from '../components/bottomsheets/RNPBottomSheet';
 import RNPText from '../components/text/RNPText';
+import {
+  pickSingleAttachment,
+  pickSingleImage,
+  takeImage,
+} from '../utils/attachmentpicker';
 
 export default function HomeScreen() {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
@@ -17,6 +22,30 @@ export default function HomeScreen() {
           setShowBottomSheet(true);
         }}>
         Show Bottom Sheet
+      </RNPButton>
+      <RNPButton
+        style={appStyles.marginTop20}
+        onPress={async () => {
+          const attachment = await pickSingleAttachment();
+          console.log('attachment', attachment);
+        }}>
+        Pick Attachment
+      </RNPButton>
+      <RNPButton
+        style={appStyles.marginTop20}
+        onPress={async () => {
+          const image = await pickSingleImage();
+          console.log('image', image);
+        }}>
+        Pick Gallery Image
+      </RNPButton>
+      <RNPButton
+        style={appStyles.marginTop20}
+        onPress={async () => {
+          const camera = await takeImage();
+          console.log('camera', camera);
+        }}>
+        Take Camera Image
       </RNPButton>
       <View style={[appStyles.marginTop20, appStyles.marginBottom20]}>
         <RNPImage
