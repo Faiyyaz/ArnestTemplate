@@ -1,6 +1,5 @@
 module.exports = {
-  placeholderName: 'HelloWorld',
-  titlePlaceholder: 'Hello App Display Name',
-  templateDir: './template',
-  postInitScript: './postInitScript.js'
-}
+  placeholderName: 'arnesttemplate', // This should match the default package name in package.json
+  templateDir: './template', // Path to the template folder
+  postInitScript: './postInitScript.js', // Optional script to run after initialization
+};
