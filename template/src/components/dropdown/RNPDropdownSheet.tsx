@@ -72,17 +72,12 @@ export default function RNPDropdownSheet(props: RNPDropdownSheetProps) {
           style={[
             styles.bottomSheet,
             {
+              backgroundColor: theme.colors.background,
+              paddingBottom: insets.bottom + hp(40),
               transform: [{translateY: slideAnim}],
             },
           ]}>
-          <View
-            style={[
-              appStyles.flexDirectionColumn,
-              {
-                backgroundColor: theme.colors.background,
-                paddingBottom: insets.bottom + hp(40),
-              },
-            ]}>
+          <View style={[appStyles.flexDirectionColumn]}>
             <View
               style={[
                 styles.header,
@@ -144,16 +139,14 @@ const styles = StyleSheet.create({
   container: {
     ...appStyles.flex1,
     ...appStyles.alignItemsCenter,
-    ...appStyles.justifyContentCenter,
     ...appStyles.flexDirectionColumn,
+    ...appStyles.justifyContentFlexEnd,
   },
   bottomSheet: {
     ...appStyles.flexDirectionColumn,
-    ...appStyles.flex1,
-    ...appStyles.justifyContentFlexEnd,
     borderTopLeftRadius: wp(12),
     borderTopRightRadius: wp(12),
-    marginTop: hp(81),
+    maxHeight: '93%',
     width: '100%',
   },
   header: {
