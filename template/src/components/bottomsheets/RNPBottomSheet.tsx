@@ -1,36 +1,148 @@
-import React, {useEffect, useRef} from 'react';
-import BottomSheet, {
-  BottomSheetProps,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import {useTheme} from 'react-native-paper';
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated, StyleSheet, View, Dimensions, Easing} from 'react-native';
+import {Modal, ModalProps, Portal, useTheme} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import appStyles from '../../styles/styles';
+import {hp, wp} from '../../utils/responsive';
+import RNPText from '../text/RNPText';
+import RNPIconButton from '../button/RNPIconButton';
+import RNPButton from '../button/RNPButton';
 
-export interface RNPBottomSheetProps extends BottomSheetProps {
-  visible: boolean;
+export interface RNPBottomSheetProps extends ModalProps {
+  headerTitle?: string;
+  footerButtonLabel?: string;
+  disableFooterButton?: boolean;
+  onClose: () => void;
+  onConfirm?: () => void;
 }
 
 export default function RNPBottomSheet(props: RNPBottomSheetProps) {
+  const {
+    headerTitle = '',
+    onClose,
+    footerButtonLabel,
+    disableFooterButton,
+    onConfirm,
+    ...otherProps
+  } = props;
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const screenHeight = Dimensions.get('window').height;
+
+  const slideAnim = useRef(new Animated.Value(screenHeight)).current;
+
+  const [shouldClose, setShouldClose] = useState(false);
 
   useEffect(() => {
-    if (!props.visible) {
-      bottomSheetRef.current?.close(); // Closes the BottomSheet properly
+    if (!shouldClose && otherProps.visible) {
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: true,
+      }).start();
+    } else if (shouldClose) {
+      Animated.timing(slideAnim, {
+        toValue: screenHeight,
+        duration: 300,
+        easing: Easing.in(Easing.exp),
+        useNativeDriver: true,
+      }).start(() => {
+        setShouldClose(false);
+        onClose(); // Call onClose when animation completes
+      });
     }
-  }, [props.visible]);
+  }, [otherProps.visible, shouldClose, onClose, screenHeight, slideAnim]);
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      {...props}
-      snapPoints={props.snapPoints ? props.snapPoints : ['90%']}
-      index={props.visible ? 0 : -1}
-      style={{backgroundColor: theme.colors.background}}
-      enableDynamicSizing={false}
-      enablePanDownToClose={false}
-      handleIndicatorStyle={{backgroundColor: theme.colors.onBackground}}
-      handleStyle={{backgroundColor: theme.colors.background}}>
-      <BottomSheetView>{props.children}</BottomSheetView>
-    </BottomSheet>
+    <Portal>
+      <Modal
+        {...otherProps}
+        dismissableBackButton={false}
+        dismissable={false}
+        contentContainerStyle={styles.container}>
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              paddingBottom: insets.bottom + hp(18),
+              backgroundColor: theme.colors.background,
+              transform: [{translateY: slideAnim}],
+            },
+          ]}>
+          <View
+            style={[styles.header, {borderBottomColor: theme.colors.outline}]}>
+            <RNPText
+              style={[
+                appStyles.flex1,
+                appStyles.textAlignCenter,
+                appStyles.flex1,
+              ]}
+              variant="titleLarge">
+              {headerTitle}
+            </RNPText>
+            <RNPIconButton
+              onPress={() => {
+                setShouldClose(true);
+              }}
+              size={wp(24)}
+              icon="close"
+            />
+          </View>
+          <View style={appStyles.flex1}>{props.children}</View>
+          {footerButtonLabel && (
+            <View
+              style={[
+                styles.footer,
+                {
+                  borderTopColor: theme.colors.outline,
+                  backgroundColor: theme.colors.background,
+                },
+              ]}>
+              <RNPButton
+                disabled={disableFooterButton}
+                onPress={() => {
+                  onConfirm?.(); // Call confirm handler
+                  setShouldClose(true);
+                }}
+                mode="contained">
+                {footerButtonLabel}
+              </RNPButton>
+            </View>
+          )}
+        </Animated.View>
+      </Modal>
+    </Portal>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    ...appStyles.flex1,
+    ...appStyles.alignItemsCenter,
+    ...appStyles.justifyContentCenter,
+    ...appStyles.flexDirectionColumn,
+  },
+  bottomSheet: {
+    ...appStyles.flexDirectionColumn,
+    ...appStyles.flex1,
+    borderTopLeftRadius: wp(12),
+    borderTopRightRadius: wp(12),
+    marginTop: hp(81),
+    width: '100%',
+  },
+  header: {
+    ...appStyles.flexDirectionRow,
+    ...appStyles.alignItemsCenter,
+    ...appStyles.paddingTop18,
+    ...appStyles.paddingBottom18,
+    borderBottomWidth: 1,
+  },
+  footer: {
+    ...appStyles.flexDirectionRow,
+    ...appStyles.alignItemsCenter,
+    ...appStyles.justifyContentCenter,
+    ...appStyles.paddingTop18,
+    borderTopWidth: 1,
+  },
+});

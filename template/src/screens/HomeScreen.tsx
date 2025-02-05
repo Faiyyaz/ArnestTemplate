@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import RNPButton from '../components/button/RNPButton';
 import appStyles from '../styles/styles';
 import RNPImage from '../components/image/RNPImage';
@@ -11,12 +11,16 @@ import {
   pickSingleImage,
   takeImage,
 } from '../utils/attachmentpicker';
+import RNPDropdown from '../components/dropdown/RNPDropdown';
 
 export default function HomeScreen() {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+    undefined,
+  );
 
   return (
-    <View style={appStyles.pageContainer}>
+    <ScrollView style={appStyles.pageScrollContainer}>
       <RNPButton
         onPress={() => {
           setShowBottomSheet(true);
@@ -61,16 +65,32 @@ export default function HomeScreen() {
         }}
         style={styles.imageStyle}
       />
-      <RNPBottomSheet visible={showBottomSheet}>
+      <View style={[appStyles.marginTop20, appStyles.marginBottom20]}>
+        <RNPDropdown
+          options={[
+            {
+              label: 'Male',
+              value: 'male',
+            },
+            {
+              label: 'Female',
+              value: 'female',
+            },
+          ]}
+          placeholder="Select Gender"
+          label="Gender"
+          value={selectedOption}
+          onChangeText={setSelectedOption}
+        />
+      </View>
+      <RNPBottomSheet
+        onClose={() => {
+          setShowBottomSheet(false);
+        }}
+        visible={showBottomSheet}>
         <RNPText>Hello In Bottom Sheet</RNPText>
-        <RNPButton
-          onPress={() => {
-            setShowBottomSheet(false);
-          }}>
-          Close
-        </RNPButton>
       </RNPBottomSheet>
-    </View>
+    </ScrollView>
   );
 }
 
