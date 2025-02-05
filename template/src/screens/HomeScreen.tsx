@@ -67,6 +67,7 @@ export default function HomeScreen() {
       />
       <View style={[appStyles.marginTop20, appStyles.marginBottom20]}>
         <RNPDropdown
+          searchable={true}
           options={[
             {
               label: 'Male',
@@ -75,6 +76,18 @@ export default function HomeScreen() {
             {
               label: 'Female',
               value: 'female',
+            },
+            {
+              label: 'Trans',
+              value: 'trans',
+            },
+            {
+              label: 'Gay',
+              value: 'gay',
+            },
+            {
+              label: 'Others',
+              value: 'others',
             },
           ]}
           placeholder="Select Gender"

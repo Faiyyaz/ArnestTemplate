@@ -7,6 +7,7 @@ import {hp, wp} from '../../utils/responsive';
 import RNPText from '../text/RNPText';
 import RNPIconButton from '../button/RNPIconButton';
 import RNPButton from '../button/RNPButton';
+import RNPSearchBar from '../text/RNPSearchbar';
 
 export interface RNPDropdownSheetProps extends ModalProps {
   headerTitle?: string;
@@ -14,6 +15,9 @@ export interface RNPDropdownSheetProps extends ModalProps {
   disableFooterButton?: boolean;
   onClose: () => void;
   onConfirm?: () => void;
+  searchValue: string;
+  setSearchValue: (search: string) => void;
+  searchable?: boolean;
 }
 
 export default function RNPDropdownSheet(props: RNPDropdownSheetProps) {
@@ -23,6 +27,9 @@ export default function RNPDropdownSheet(props: RNPDropdownSheetProps) {
     footerButtonLabel,
     disableFooterButton,
     onConfirm,
+    searchValue,
+    setSearchValue,
+    searchable,
     ...otherProps
   } = props;
   const insets = useSafeAreaInsets();
@@ -98,6 +105,13 @@ export default function RNPDropdownSheet(props: RNPDropdownSheetProps) {
                 icon="close"
               />
             </View>
+            {searchable && (
+              <RNPSearchBar
+                style={[appStyles.marginTop8, appStyles.marginBottom8]}
+                value={searchValue}
+                onChangeText={setSearchValue}
+              />
+            )}
             {props.children}
             {footerButtonLabel && (
               <View

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {hp} from '../utils/responsive';
+import {hp, wp} from '../utils/responsive';
 
 const appStyles = StyleSheet.create({
   flexDirectionRow: {
@@ -12,6 +12,10 @@ const appStyles = StyleSheet.create({
 
   alignItemsCenter: {
     alignItems: 'center',
+  },
+
+  alignSelfCenter: {
+    alignSelf: 'center',
   },
 
   justifyContentCenter: {
@@ -44,6 +48,10 @@ const appStyles = StyleSheet.create({
     flexDirection: 'column',
   },
 
+  marginBottom16: {
+    marginBottom: hp(16),
+  },
+
   marginBottom20: {
     marginBottom: hp(20),
   },
@@ -52,11 +60,35 @@ const appStyles = StyleSheet.create({
     marginTop: hp(20),
   },
 
+  marginTop8: {
+    marginTop: hp(8),
+  },
+
+  marginBottom8: {
+    marginBottom: hp(8),
+  },
+
   padding0: {
     paddingTop: 0,
     paddingBottom: 0,
     paddingLeft: 0,
     paddingRight: 0,
+  },
+
+  paddingLeft16: {
+    paddingLeft: wp(16),
+  },
+
+  paddingRight16: {
+    paddingRight: wp(16),
+  },
+
+  paddingTop16: {
+    paddingTop: hp(16),
+  },
+
+  paddingBottom16: {
+    paddingBottom: hp(16),
   },
 
   paddingVertical8: {

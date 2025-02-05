@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, TouchableOpacity, View} from 'react-native';
 import {
   TextInput,
@@ -10,6 +10,7 @@ import {
 import RNPText from '../text/RNPText';
 import appStyles from '../../styles/styles';
 import RNPDropdownSheet from './RNPDropdownSheet';
+import RNPIcon from '../icon/RNPIcon';
 
 export interface RNPDropdownProps extends TextInputProps {
   disabled?: boolean;
@@ -18,14 +19,42 @@ export interface RNPDropdownProps extends TextInputProps {
     label: string;
     value: string;
   }[];
+  searchable?: boolean;
 }
 
 export default function RNPDropdown(props: RNPDropdownProps) {
-  const {disabled, required, options, value, ...otherProps} = props;
+  const {disabled, required, options, value, searchable, ...otherProps} = props;
   const theme = useTheme();
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
   const [tempValue, setTempValue] = useState<string | undefined>(value);
+  const [searchValue, setSearchValue] = useState('');
+  const [filteredOptions, setFilteredOptions] = useState<
+    {
+      label: string;
+      value: string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    if (!showBottomSheet && searchValue !== '') {
+      setSearchValue('');
+    }
+  }, [showBottomSheet, searchValue]);
+
+  useEffect(() => {
+    if (searchValue !== '') {
+      let _filteredOptions = [...options];
+
+      _filteredOptions = _filteredOptions.filter(option =>
+        option.label.toLowerCase().includes(searchValue.toLowerCase()),
+      );
+
+      setFilteredOptions(_filteredOptions);
+    } else {
+      setFilteredOptions(options);
+    }
+  }, [searchValue, options]);
 
   function buildLeftIcon(itemValue: string) {
     return (
@@ -37,6 +66,33 @@ export default function RNPDropdown(props: RNPDropdownProps) {
         value={itemValue === tempValue ? 'checked' : 'unchecked'}
         status={itemValue === tempValue ? 'checked' : 'unchecked'}
       />
+    );
+  }
+
+  function renderEmptyComponent() {
+    return (
+      <View
+        style={[
+          appStyles.flexDirectionColumn,
+          appStyles.paddingTop16,
+          appStyles.paddingBottom16,
+          appStyles.alignItemsCenter,
+        ]}>
+        <RNPIcon
+          style={appStyles.marginBottom16}
+          size={84}
+          source="alert-octagon-outline"
+        />
+        {searchValue ? (
+          <RNPText variant="titleMedium" style={appStyles.textAlignCenter}>
+            No results found for ‘{searchValue}’. Try a different search term.
+          </RNPText>
+        ) : (
+          <RNPText variant="titleMedium" style={appStyles.textAlignCenter}>
+            Looks a little empty here. Check back later!
+          </RNPText>
+        )}
+      </View>
     );
   }
 
@@ -69,6 +125,9 @@ export default function RNPDropdown(props: RNPDropdownProps) {
         />
       </TouchableOpacity>
       <RNPDropdownSheet
+        searchable={searchable}
+        setSearchValue={setSearchValue}
+        searchValue={searchValue}
         footerButtonLabel="Select"
         onClose={() => {
           setTempValue(selectedValue); // Revert if closed without confirm
@@ -80,6 +139,12 @@ export default function RNPDropdown(props: RNPDropdownProps) {
         }}
         visible={showBottomSheet}>
         <FlatList
+          contentContainerStyle={[
+            appStyles.flexGrow1,
+            appStyles.paddingLeft16,
+            appStyles.paddingRight16,
+          ]}
+          ListEmptyComponent={renderEmptyComponent}
           renderItem={({item}) => (
             <List.Item
               left={() => buildLeftIcon(item.value)}
@@ -98,7 +163,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
             />
           )}
           keyExtractor={item => item.value}
-          data={options}
+          data={filteredOptions}
           extraData={tempValue}
         />
       </RNPDropdownSheet>
