@@ -90,9 +90,10 @@ export default function HomeScreen() {
               value: 'others',
             },
           ]}
+          multiple={true}
           placeholder="Select Gender"
           label="Gender"
-          value={selectedOption}
+          values={selectedOption}
           onChangeText={setSelectedOption}
         />
       </View>

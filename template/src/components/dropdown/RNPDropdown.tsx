@@ -6,6 +6,7 @@ import {
   useTheme,
   List,
   RadioButton,
+  Checkbox,
 } from 'react-native-paper';
 import RNPText from '../text/RNPText';
 import appStyles from '../../styles/styles';
@@ -20,14 +21,28 @@ export interface RNPDropdownProps extends TextInputProps {
     value: string;
   }[];
   searchable?: boolean;
+  multiple?: boolean;
+  values: string[] | string | undefined;
 }
 
 export default function RNPDropdown(props: RNPDropdownProps) {
-  const {disabled, required, options, value, searchable, ...otherProps} = props;
+  const {
+    disabled,
+    required,
+    options,
+    values,
+    searchable,
+    multiple,
+    ...otherProps
+  } = props;
   const theme = useTheme();
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
-  const [tempValue, setTempValue] = useState<string | undefined>(value);
+  const [selectedValues, setSelectedValues] = useState<
+    string[] | string | undefined
+  >(values ?? undefined); // Update to handle multiple values
+  const [tempValues, setTempValues] = useState<string[] | string | undefined>(
+    selectedValues,
+  ); // Track temporary selection
   const [searchValue, setSearchValue] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<
     {
@@ -57,14 +72,26 @@ export default function RNPDropdown(props: RNPDropdownProps) {
   }, [searchValue, options]);
 
   function buildLeftIcon(itemValue: string) {
-    return (
-      <RadioButton
-        color={theme.colors.primary}
+    const isSelected = tempValues?.includes(itemValue);
+    return multiple ? (
+      <Checkbox
         onPress={() => {
-          setTempValue(itemValue);
+          const _values = tempValues ? (tempValues as string[]) : [];
+          if (isSelected) {
+            setTempValues(_values?.filter(value => value !== itemValue));
+          } else {
+            setTempValues([..._values, itemValue]);
+          }
         }}
-        value={itemValue === tempValue ? 'checked' : 'unchecked'}
-        status={itemValue === tempValue ? 'checked' : 'unchecked'}
+        status={isSelected ? 'checked' : 'unchecked'}
+      />
+    ) : (
+      <RadioButton
+        onPress={() => {
+          setTempValues(itemValue);
+        }}
+        value={isSelected ? 'checked' : 'unchecked'}
+        status={isSelected ? 'checked' : 'unchecked'}
       />
     );
   }
@@ -102,14 +129,18 @@ export default function RNPDropdown(props: RNPDropdownProps) {
         disabled={disabled}
         activeOpacity={1}
         onPress={() => {
-          setTempValue(selectedValue); // Store the previous value before opening
+          setTempValues(selectedValues); // Store the previous values before opening
           setShowBottomSheet(true);
         }}>
         <TextInput
           {...otherProps}
           value={
-            selectedValue
-              ? options.find(o => o.value === selectedValue)?.label
+            selectedValues
+              ? typeof selectedValues === 'string'
+                ? options.find(o => o.value === selectedValues)?.label
+                : selectedValues
+                    .map(value => options.find(o => o.value === value)?.label)
+                    .join(', ')
               : undefined
           }
           focusable={false}
@@ -130,11 +161,11 @@ export default function RNPDropdown(props: RNPDropdownProps) {
         searchValue={searchValue}
         footerButtonLabel="Select"
         onClose={() => {
-          setTempValue(selectedValue); // Revert if closed without confirm
+          setTempValues(selectedValues); // Revert if closed without confirm
           setShowBottomSheet(false);
         }}
         onConfirm={() => {
-          setSelectedValue(tempValue); // Save the selected value
+          setSelectedValues(tempValues); // Save the selected values
           setShowBottomSheet(false);
         }}
         visible={showBottomSheet}>
@@ -149,22 +180,29 @@ export default function RNPDropdown(props: RNPDropdownProps) {
             <List.Item
               left={() => buildLeftIcon(item.value)}
               onPress={() => {
-                setTempValue(item.value);
+                if (multiple) {
+                  const _values = tempValues ? (tempValues as string[]) : [];
+                  const newTempValues = _values.includes(item.value)
+                    ? _values.filter(value => value !== item.value)
+                    : [..._values, item.value];
+                  setTempValues(newTempValues); // Update temp values for multiple selection
+                } else {
+                  setTempValues(item.value); // Single selection
+                }
               }}
               style={[appStyles.padding0, appStyles.paddingVertical8]}
               titleStyle={{
                 ...theme.fonts.bodyLarge,
-                color:
-                  tempValue === item.value
-                    ? theme.colors.primary
-                    : theme.colors.onSurface,
+                color: tempValues?.includes(item.value)
+                  ? theme.colors.primary
+                  : theme.colors.onSurface,
               }}
               title={item.label}
             />
           )}
           keyExtractor={item => item.value}
           data={filteredOptions}
-          extraData={tempValue}
+          extraData={tempValues}
         />
       </RNPDropdownSheet>
     </View>
