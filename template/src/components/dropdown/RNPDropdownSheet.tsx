@@ -6,14 +6,25 @@ import appStyles from '../../styles/styles';
 import {hp, wp} from '../../utils/responsive';
 import RNPText from '../text/RNPText';
 import RNPIconButton from '../button/RNPIconButton';
+import RNPButton from '../button/RNPButton';
 
-export interface RNPBottomSheetProps extends ModalProps {
+export interface RNPDropdownSheetProps extends ModalProps {
   headerTitle?: string;
+  footerButtonLabel?: string;
+  disableFooterButton?: boolean;
   onClose: () => void;
+  onConfirm?: () => void;
 }
 
-export default function RNPBottomSheet(props: RNPBottomSheetProps) {
-  const {headerTitle = '', onClose, ...otherProps} = props;
+export default function RNPDropdownSheet(props: RNPDropdownSheetProps) {
+  const {
+    headerTitle = '',
+    onClose,
+    footerButtonLabel,
+    disableFooterButton,
+    onConfirm,
+    ...otherProps
+  } = props;
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const screenHeight = Dimensions.get('window').height;
@@ -79,6 +90,26 @@ export default function RNPBottomSheet(props: RNPBottomSheetProps) {
             />
           </View>
           <View style={appStyles.flex1}>{props.children}</View>
+          {footerButtonLabel && (
+            <View
+              style={[
+                styles.footer,
+                {
+                  borderTopColor: theme.colors.outline,
+                  backgroundColor: theme.colors.background,
+                },
+              ]}>
+              <RNPButton
+                disabled={disableFooterButton}
+                onPress={() => {
+                  onConfirm?.(); // Call confirm handler
+                  setShouldClose(true);
+                }}
+                mode="contained">
+                {footerButtonLabel}
+              </RNPButton>
+            </View>
+          )}
         </Animated.View>
       </Modal>
     </Portal>
@@ -106,5 +137,12 @@ const styles = StyleSheet.create({
     ...appStyles.paddingTop18,
     ...appStyles.paddingBottom18,
     borderBottomWidth: 1,
+  },
+  footer: {
+    ...appStyles.flexDirectionRow,
+    ...appStyles.alignItemsCenter,
+    ...appStyles.justifyContentCenter,
+    ...appStyles.paddingTop18,
+    borderTopWidth: 1,
   },
 });

@@ -9,9 +9,9 @@ import {
 } from 'react-native-paper';
 import RNPText from '../text/RNPText';
 import appStyles from '../../styles/styles';
-import RNPBottomSheet from '../bottomsheets/RNPBottomSheet';
 import {FlashList} from '@shopify/flash-list';
 import {hp} from '../../utils/responsive';
+import RNPDropdownSheet from './RNPDropdownSheet';
 
 export interface RNPDropdownProps extends TextInputProps {
   disabled?: boolean;
@@ -70,7 +70,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
           }
         />
       </TouchableOpacity>
-      <RNPBottomSheet
+      <RNPDropdownSheet
         footerButtonLabel="Select"
         onClose={() => {
           setTempValue(selectedValue); // Revert if closed without confirm
@@ -104,7 +104,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
           data={options}
           extraData={tempValue}
         />
-      </RNPBottomSheet>
+      </RNPDropdownSheet>
     </View>
   );
 }
