@@ -54,31 +54,41 @@ export default function RNPBottomSheet(props: RNPBottomSheetProps) {
           style={[
             styles.bottomSheet,
             {
-              paddingBottom: insets.bottom + hp(18),
-              backgroundColor: theme.colors.background,
               transform: [{translateY: slideAnim}],
             },
           ]}>
           <View
-            style={[styles.header, {borderBottomColor: theme.colors.outline}]}>
-            <RNPText
+            style={[
+              appStyles.flexDirectionColumn,
+              {
+                backgroundColor: theme.colors.background,
+                paddingBottom: insets.bottom + hp(40),
+              },
+            ]}>
+            <View
               style={[
-                appStyles.flex1,
-                appStyles.textAlignCenter,
-                appStyles.flex1,
-              ]}
-              variant="titleLarge">
-              {headerTitle}
-            </RNPText>
-            <RNPIconButton
-              onPress={() => {
-                setShouldClose(true);
-              }}
-              size={wp(24)}
-              icon="close"
-            />
+                styles.header,
+                {borderBottomColor: theme.colors.outline},
+              ]}>
+              <RNPText
+                style={[
+                  appStyles.flex1,
+                  appStyles.textAlignCenter,
+                  appStyles.flex1,
+                ]}
+                variant="titleLarge">
+                {headerTitle}
+              </RNPText>
+              <RNPIconButton
+                onPress={() => {
+                  setShouldClose(true);
+                }}
+                size={wp(24)}
+                icon="close"
+              />
+            </View>
+            {props.children}
           </View>
-          <View style={appStyles.flex1}>{props.children}</View>
         </Animated.View>
       </Modal>
     </Portal>
@@ -95,6 +105,7 @@ const styles = StyleSheet.create({
   bottomSheet: {
     ...appStyles.flexDirectionColumn,
     ...appStyles.flex1,
+    ...appStyles.justifyContentFlexEnd,
     borderTopLeftRadius: wp(12),
     borderTopRightRadius: wp(12),
     marginTop: hp(81),

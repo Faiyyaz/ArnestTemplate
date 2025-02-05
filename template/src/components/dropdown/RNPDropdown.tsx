@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {FlatList, TouchableOpacity, View} from 'react-native';
 import {
   TextInput,
   TextInputProps,
@@ -9,8 +9,6 @@ import {
 } from 'react-native-paper';
 import RNPText from '../text/RNPText';
 import appStyles from '../../styles/styles';
-import {FlashList} from '@shopify/flash-list';
-import {hp} from '../../utils/responsive';
 import RNPDropdownSheet from './RNPDropdownSheet';
 
 export interface RNPDropdownProps extends TextInputProps {
@@ -81,8 +79,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
           setShowBottomSheet(false);
         }}
         visible={showBottomSheet}>
-        <FlashList
-          estimatedItemSize={hp(56)}
+        <FlatList
           renderItem={({item}) => (
             <List.Item
               left={() => buildLeftIcon(item.value)}

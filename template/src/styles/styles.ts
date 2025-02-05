@@ -18,6 +18,10 @@ const appStyles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  justifyContentFlexEnd: {
+    justifyContent: 'flex-end',
+  },
+
   textAlignCenter: {
     textAlign: 'center',
   },
