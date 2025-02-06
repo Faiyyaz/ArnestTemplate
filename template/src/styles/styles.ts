@@ -10,6 +10,10 @@ const appStyles = StyleSheet.create({
     flexDirection: 'column',
   },
 
+  flexWrapWrap: {
+    flexWrap: 'wrap',
+  },
+
   alignItemsCenter: {
     alignItems: 'center',
   },
@@ -46,6 +50,10 @@ const appStyles = StyleSheet.create({
   pageScrollContainer: {
     flexGrow: 1,
     flexDirection: 'column',
+  },
+
+  marginRight8: {
+    marginRight: wp(8),
   },
 
   marginBottom16: {

@@ -15,9 +15,9 @@ import RNPDropdown from '../components/dropdown/RNPDropdown';
 
 export default function HomeScreen() {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedOption, setSelectedOption] = useState<
+    string[] | string | undefined
+  >(undefined);
 
   return (
     <ScrollView style={appStyles.pageScrollContainer}>
@@ -92,9 +92,8 @@ export default function HomeScreen() {
           ]}
           multiple={true}
           placeholder="Select Gender"
-          label="Gender"
           values={selectedOption}
-          onChangeText={setSelectedOption}
+          onChange={setSelectedOption}
         />
       </View>
       <RNPBottomSheet

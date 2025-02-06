@@ -1,19 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, TouchableOpacity, View} from 'react-native';
-import {
-  TextInput,
-  TextInputProps,
-  useTheme,
-  List,
-  RadioButton,
-  Checkbox,
-} from 'react-native-paper';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import RNPText from '../text/RNPText';
 import appStyles from '../../styles/styles';
 import RNPDropdownSheet from './RNPDropdownSheet';
-import RNPIcon from '../icon/RNPIcon';
+import _ from 'lodash';
+import {Chip} from 'react-native-paper';
 
-export interface RNPDropdownProps extends TextInputProps {
+export interface RNPDropdownProps {
   disabled?: boolean;
   required?: boolean;
   options: {
@@ -23,188 +16,95 @@ export interface RNPDropdownProps extends TextInputProps {
   searchable?: boolean;
   multiple?: boolean;
   values: string[] | string | undefined;
+  placeholder?: string;
+  buttonLabel?: string;
+  searchPlaceholder?: string;
+  onChange: (values: string[] | string | undefined) => void;
 }
 
 export default function RNPDropdown(props: RNPDropdownProps) {
   const {
     disabled,
-    required,
     options,
     values,
     searchable,
-    multiple,
-    ...otherProps
+    multiple = false,
+    placeholder = 'Select an option',
+    buttonLabel = 'Select',
+    searchPlaceholder = 'Search',
+    onChange,
   } = props;
-  const theme = useTheme();
+
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<
-    string[] | string | undefined
-  >(values ?? undefined); // Update to handle multiple values
-  const [tempValues, setTempValues] = useState<string[] | string | undefined>(
-    selectedValues,
-  ); // Track temporary selection
-  const [searchValue, setSearchValue] = useState('');
-  const [filteredOptions, setFilteredOptions] = useState<
-    {
-      label: string;
-      value: string;
-    }[]
-  >([]);
 
-  useEffect(() => {
-    if (!showBottomSheet && searchValue !== '') {
-      setSearchValue('');
+  const selectedValues = multiple && Array.isArray(values) ? values : [];
+
+  function handleRemove(index: number) {
+    if (!multiple || !Array.isArray(values)) {
+      return;
     }
-  }, [showBottomSheet, searchValue]);
 
-  useEffect(() => {
-    if (searchValue !== '') {
-      let _filteredOptions = [...options];
+    const updatedValues = [...values];
+    updatedValues.splice(index, 1); // Remove the selected value
 
-      _filteredOptions = _filteredOptions.filter(option =>
-        option.label.toLowerCase().includes(searchValue.toLowerCase()),
-      );
-
-      setFilteredOptions(_filteredOptions);
-    } else {
-      setFilteredOptions(options);
-    }
-  }, [searchValue, options]);
-
-  function buildLeftIcon(itemValue: string) {
-    const isSelected = tempValues?.includes(itemValue);
-    return multiple ? (
-      <Checkbox
-        onPress={() => {
-          const _values = tempValues ? (tempValues as string[]) : [];
-          if (isSelected) {
-            setTempValues(_values?.filter(value => value !== itemValue));
-          } else {
-            setTempValues([..._values, itemValue]);
-          }
-        }}
-        status={isSelected ? 'checked' : 'unchecked'}
-      />
-    ) : (
-      <RadioButton
-        onPress={() => {
-          setTempValues(itemValue);
-        }}
-        value={isSelected ? 'checked' : 'unchecked'}
-        status={isSelected ? 'checked' : 'unchecked'}
-      />
-    );
-  }
-
-  function renderEmptyComponent() {
-    return (
-      <View
-        style={[
-          appStyles.flexDirectionColumn,
-          appStyles.paddingTop16,
-          appStyles.paddingBottom16,
-          appStyles.alignItemsCenter,
-        ]}>
-        <RNPIcon
-          style={appStyles.marginBottom16}
-          size={84}
-          source="alert-octagon-outline"
-        />
-        {searchValue ? (
-          <RNPText variant="titleMedium" style={appStyles.textAlignCenter}>
-            No results found for ‘{searchValue}’. Try a different search term.
-          </RNPText>
-        ) : (
-          <RNPText variant="titleMedium" style={appStyles.textAlignCenter}>
-            Looks a little empty here. Check back later!
-          </RNPText>
-        )}
-      </View>
-    );
+    onChange(updatedValues.length > 0 ? updatedValues : undefined); // Ensure empty selection is handled properly
   }
 
   return (
-    <View style={[appStyles.flexDirectionColumn]}>
+    <View style={appStyles.flexDirectionColumn}>
       <TouchableOpacity
         disabled={disabled}
         activeOpacity={1}
-        onPress={() => {
-          setTempValues(selectedValues); // Store the previous values before opening
-          setShowBottomSheet(true);
-        }}>
-        <TextInput
-          {...otherProps}
-          value={
-            selectedValues
-              ? typeof selectedValues === 'string'
-                ? options.find(o => o.value === selectedValues)?.label
-                : selectedValues
-                    .map(value => options.find(o => o.value === value)?.label)
-                    .join(', ')
-              : undefined
-          }
-          focusable={false}
-          editable={false}
-          label={
-            <RNPText variant="bodyMedium">
-              {props.label}
-              {required && (
-                <RNPText style={{color: theme.colors.error}}> *</RNPText>
-              )}
-            </RNPText>
-          }
-        />
+        onPress={() => setShowBottomSheet(true)}>
+        {multiple ? (
+          !_.isEmpty(selectedValues) ? (
+            <View style={styles.chipContainer}>
+              {selectedValues.map((value, index) => (
+                <Chip
+                  style={styles.chipMargin}
+                  key={index}
+                  onClose={() => handleRemove(index)}>
+                  {options.find(option => option.value === value)?.label}
+                </Chip>
+              ))}
+            </View>
+          ) : (
+            <RNPText>{placeholder}</RNPText>
+          )
+        ) : (
+          <RNPText>
+            {values
+              ? options.find(option => option.value === values)?.label
+              : placeholder}
+          </RNPText>
+        )}
       </TouchableOpacity>
+
       <RNPDropdownSheet
         searchable={searchable}
-        setSearchValue={setSearchValue}
-        searchValue={searchValue}
-        footerButtonLabel="Select"
-        onClose={() => {
-          setTempValues(selectedValues); // Revert if closed without confirm
+        searchPlaceholder={searchPlaceholder}
+        multiple={multiple}
+        values={values}
+        options={options}
+        footerButtonLabel={buttonLabel}
+        onClose={() => setShowBottomSheet(false)}
+        onConfirm={newValues => {
+          onChange(newValues);
           setShowBottomSheet(false);
         }}
-        onConfirm={() => {
-          setSelectedValues(tempValues); // Save the selected values
-          setShowBottomSheet(false);
-        }}
-        visible={showBottomSheet}>
-        <FlatList
-          contentContainerStyle={[
-            appStyles.flexGrow1,
-            appStyles.paddingLeft16,
-            appStyles.paddingRight16,
-          ]}
-          ListEmptyComponent={renderEmptyComponent}
-          renderItem={({item}) => (
-            <List.Item
-              left={() => buildLeftIcon(item.value)}
-              onPress={() => {
-                if (multiple) {
-                  const _values = tempValues ? (tempValues as string[]) : [];
-                  const newTempValues = _values.includes(item.value)
-                    ? _values.filter(value => value !== item.value)
-                    : [..._values, item.value];
-                  setTempValues(newTempValues); // Update temp values for multiple selection
-                } else {
-                  setTempValues(item.value); // Single selection
-                }
-              }}
-              style={[appStyles.padding0, appStyles.paddingVertical8]}
-              titleStyle={{
-                ...theme.fonts.bodyLarge,
-                color: tempValues?.includes(item.value)
-                  ? theme.colors.primary
-                  : theme.colors.onSurface,
-              }}
-              title={item.label}
-            />
-          )}
-          keyExtractor={item => item.value}
-          data={filteredOptions}
-          extraData={tempValues}
-        />
-      </RNPDropdownSheet>
+        visible={showBottomSheet}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  chipContainer: {
+    ...appStyles.flexDirectionRow,
+    ...appStyles.flexWrapWrap,
+  },
+  chipMargin: {
+    ...appStyles.marginRight8,
+    ...appStyles.marginBottom8,
+  },
+});
