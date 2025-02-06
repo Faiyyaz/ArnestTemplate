@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import RNPText from '../text/RNPText';
 import appStyles from '../../styles/styles';
 import RNPDropdownSheet from './RNPDropdownSheet';
@@ -20,6 +26,7 @@ export interface RNPDropdownProps {
   buttonLabel?: string;
   searchPlaceholder?: string;
   onChange: (values: string[] | string | undefined) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
 export default function RNPDropdown(props: RNPDropdownProps) {
@@ -32,6 +39,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
     placeholder = 'Select an option',
     buttonLabel = 'Select',
     searchPlaceholder = 'Search',
+    style,
     onChange,
   } = props;
 
@@ -55,6 +63,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
       <TouchableOpacity
         disabled={disabled}
         activeOpacity={1}
+        style={style}
         onPress={() => setShowBottomSheet(true)}>
         {multiple ? (
           !_.isEmpty(selectedValues) ? (

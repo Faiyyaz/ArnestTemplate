@@ -1,23 +1,25 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 import appStyles from '../../styles/styles';
 import RNPIcon from '../icon/RNPIcon';
 import RNPText from '../text/RNPText';
 
 export interface RNPEmptyComponentProps {
   searchValue?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 export default function RNPEmptyComponent(props: RNPEmptyComponentProps) {
-  const {searchValue} = props;
+  const {searchValue, style} = props;
 
   return (
     <View
       style={[
-        appStyles.flexDirectionColumn,
+        appStyles.pageContainer,
         appStyles.paddingTop16,
         appStyles.paddingBottom16,
         appStyles.alignItemsCenter,
+        style ? style : {},
       ]}>
       <RNPIcon
         style={appStyles.marginBottom16}

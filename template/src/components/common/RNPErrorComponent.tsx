@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 import appStyles from '../../styles/styles';
 import RNPIcon from '../icon/RNPIcon';
 import RNPText from '../text/RNPText';
@@ -8,18 +8,20 @@ import RNPButton from '../button/RNPButton';
 export interface RNPErrorComponentProps {
   error: string;
   onRetry?: () => void;
+  style?: StyleProp<ViewStyle>;
 }
 
 export default function RNPErrorComponent(props: RNPErrorComponentProps) {
-  const {error, onRetry} = props;
+  const {error, onRetry, style} = props;
 
   return (
     <View
       style={[
-        appStyles.flexDirectionColumn,
+        appStyles.pageContainer,
         appStyles.paddingTop16,
         appStyles.paddingBottom16,
         appStyles.alignItemsCenter,
+        style ? style : {},
       ]}>
       <RNPIcon
         style={appStyles.marginBottom16}
