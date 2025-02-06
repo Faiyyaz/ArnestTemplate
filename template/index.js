@@ -20,6 +20,8 @@ import {
 } from '@react-navigation/native';
 import merge from 'deepmerge';
 import {navigationRef} from './src/navigators/RootNavigator';
+import Toast from 'react-native-toast-message';
+import toastConfig from './src/components/common/RNPToast';
 
 const App1 = () => {
   const {LightTheme, DarkTheme} = adaptNavigationTheme({
@@ -51,6 +53,7 @@ const App1 = () => {
               <App />
             </NavigationContainer>
           </UserProvider>
+          <Toast position="bottom" config={toastConfig} />
         </SafeAreaProvider>
       </ThemeProvider>
     </PaperProvider>

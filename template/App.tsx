@@ -1,13 +1,13 @@
 import React from 'react';
 import StackNavigator from './src/navigators/StackNavigator';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import appStyles from './src/styles/styles';
+import {View} from 'react-native';
 
 function App(): React.JSX.Element {
   return (
-    <GestureHandlerRootView style={appStyles.pageContainer}>
+    <View style={appStyles.pageContainer}>
       <StackNavigator />
-    </GestureHandlerRootView>
+    </View>
   );
 }
 

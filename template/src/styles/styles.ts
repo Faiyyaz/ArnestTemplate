@@ -56,6 +56,10 @@ const appStyles = StyleSheet.create({
     marginRight: wp(8),
   },
 
+  marginRight12: {
+    marginRight: wp(12),
+  },
+
   marginBottom16: {
     marginBottom: hp(16),
   },
@@ -110,6 +114,18 @@ const appStyles = StyleSheet.create({
 
   paddingBottom18: {
     paddingBottom: hp(18),
+  },
+
+  paddingLeft24: {
+    paddingLeft: wp(24),
+  },
+
+  paddingRight24: {
+    paddingRight: wp(24),
+  },
+
+  borderRadius10: {
+    borderRadius: wp(10),
   },
 });
 
