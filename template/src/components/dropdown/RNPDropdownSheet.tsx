@@ -65,14 +65,17 @@ export default function RNPDropdownSheet(props: RNPDropdownSheetProps) {
   >([]);
 
   const [tempValues, setTempValues] = useState<string[] | string | undefined>(
-    values,
+    undefined,
   );
 
   useEffect(() => {
-    if (!otherProps.visible && searchValue !== '') {
-      setSearchValue('');
+    if (!otherProps.visible) {
+      if (searchValue !== '') {
+        setSearchValue('');
+      }
+      setTempValues(values);
     }
-  }, [otherProps.visible, searchValue]);
+  }, [otherProps.visible, searchValue, values]);
 
   useEffect(() => {
     if (searchValue !== '') {

@@ -84,7 +84,7 @@ export default function RNPDropdown(props: RNPDropdownProps) {
         searchable={searchable}
         searchPlaceholder={searchPlaceholder}
         multiple={multiple}
-        values={values}
+        values={selectedValues}
         options={options}
         footerButtonLabel={buttonLabel}
         onClose={() => setShowBottomSheet(false)}
