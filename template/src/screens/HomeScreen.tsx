@@ -12,12 +12,14 @@ import {
   takeImage,
 } from '../utils/attachmentpicker';
 import RNPDropdown from '../components/dropdown/RNPDropdown';
+import {useNavigation} from '@react-navigation/native';
 
 export default function HomeScreen() {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [selectedOption, setSelectedOption] = useState<
     string[] | string | undefined
   >(undefined);
+  const navigation: any = useNavigation();
 
   return (
     <ScrollView style={appStyles.pageScrollContainer}>
@@ -26,6 +28,13 @@ export default function HomeScreen() {
           setShowBottomSheet(true);
         }}>
         Show Bottom Sheet
+      </RNPButton>
+      <RNPButton
+        style={appStyles.marginTop20}
+        onPress={() => {
+          navigation.push('Tabs');
+        }}>
+        Go to Tab Screen
       </RNPButton>
       <RNPButton
         style={appStyles.marginTop20}
