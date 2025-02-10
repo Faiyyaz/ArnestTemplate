@@ -14,6 +14,7 @@ import {
 import RNPDropdown from '../components/dropdown/RNPDropdown';
 import {useNavigation} from '@react-navigation/native';
 import RNPAccordion from '../components/common/RNPAccordion';
+import RNPProgressbar from '../components/common/RNPProgressbar';
 
 export default function HomeScreen() {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
@@ -31,6 +32,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={appStyles.pageScrollContainer}>
       <RNPAccordion data={accordionData} />
+      <RNPProgressbar progress={0.5} />
       <RNPButton
         onPress={() => {
           setShowBottomSheet(true);
