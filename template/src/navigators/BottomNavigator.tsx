@@ -6,6 +6,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import RNPBottomTabbar from '../components/common/RNPBottomTabbar';
+import ProductScreen from '../screens/ProductScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -55,7 +56,7 @@ export default function BottomNavigator() {
       tabBar={buildTabBar}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={ProductScreen}
         options={{
           tabBarIcon: buildHomeIcon,
         }}

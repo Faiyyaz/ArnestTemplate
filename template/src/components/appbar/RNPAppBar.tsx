@@ -19,13 +19,15 @@ export default function RNPAppBar(props: NativeStackHeaderProps) {
       return '';
     }
 
-    const headerTitle = getHeaderTitle();
-    if (headerTitle !== '') {
-      setTitle(headerTitle);
-    } else if (props?.options.title) {
+    if (props?.options.title) {
       setTitle(props.options.title);
     } else if (props?.options.headerTitle) {
       setTitle(props.options.headerTitle as string);
+    } else {
+      const headerTitle = getHeaderTitle();
+      if (headerTitle !== '') {
+        setTitle(headerTitle);
+      }
     }
 
     setCanGoBack(navigation.canGoBack());

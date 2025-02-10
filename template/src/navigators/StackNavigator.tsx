@@ -4,6 +4,7 @@ import {useTheme} from 'react-native-paper';
 import RNPAppBar from '../components/appbar/RNPAppBar';
 import TabNavigator from './TabNavigator';
 import DrawerNavigator from './DrawerNavigator';
+import ProductDetailScreen from '../screens/ProductDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const MyAppBar = (props: any) => <RNPAppBar {...props} />;
@@ -26,6 +27,10 @@ export default function StackNavigator() {
         }}
       />
       <Stack.Screen name="Tabs" component={TabNavigator} />
+      <Stack.Screen
+        name="ProductDetailScreen"
+        component={ProductDetailScreen}
+      />
     </Stack.Navigator>
   );
 }
