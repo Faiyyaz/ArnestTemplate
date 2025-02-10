@@ -13,6 +13,7 @@ import {
 } from '../utils/attachmentpicker';
 import RNPDropdown from '../components/dropdown/RNPDropdown';
 import {useNavigation} from '@react-navigation/native';
+import RNPAccordion from '../components/common/RNPAccordion';
 
 export default function HomeScreen() {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
@@ -21,8 +22,15 @@ export default function HomeScreen() {
   >(undefined);
   const navigation: any = useNavigation();
 
+  const accordionData = [
+    {id: '1', title: 'Accordion 1', items: ['Item 1', 'Item 2']},
+    {id: '2', title: 'Accordion 2', items: ['Item 3', 'Item 4']},
+    {id: '3', title: 'Accordion 3', items: ['Item 5', 'Item 6']},
+  ];
+
   return (
     <ScrollView style={appStyles.pageScrollContainer}>
+      <RNPAccordion data={accordionData} />
       <RNPButton
         onPress={() => {
           setShowBottomSheet(true);
