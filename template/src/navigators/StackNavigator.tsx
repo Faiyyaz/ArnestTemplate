@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTheme} from 'react-native-paper';
 import RNPAppBar from '../components/appbar/RNPAppBar';
 import TabNavigator from './TabNavigator';
-import BottomNavigator from './BottomNavigator';
+import DrawerNavigator from './DrawerNavigator';
 
 const Stack = createNativeStackNavigator();
 const MyAppBar = (props: any) => <RNPAppBar {...props} />;
@@ -13,12 +13,18 @@ export default function StackNavigator() {
 
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Drawer"
       screenOptions={{
         header: MyAppBar,
         contentStyle: {backgroundColor: theme.colors.background},
       }}>
-      <Stack.Screen name="Home" component={BottomNavigator} />
+      <Stack.Screen
+        name="Drawer"
+        component={DrawerNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="Tabs" component={TabNavigator} />
     </Stack.Navigator>
   );
