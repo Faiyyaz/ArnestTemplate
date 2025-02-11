@@ -6,6 +6,7 @@ import TabNavigator from './TabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import WebViewScreen from '../screens/WebViewScreen';
+import FormExampleScreen from '../screens/FormExampleScreen';
 
 const Stack = createNativeStackNavigator();
 const MyAppBar = (props: any) => <RNPAppBar {...props} />;
@@ -39,6 +40,7 @@ export default function StackNavigator() {
           headerTitle: '',
         }}
       />
+      <Stack.Screen name="FormExampleScreen" component={FormExampleScreen} />
     </Stack.Navigator>
   );
 }
