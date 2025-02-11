@@ -24,6 +24,7 @@ import Toast from 'react-native-toast-message';
 import toastConfig from './src/components/common/RNPToast';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {KeyboardProvider} from 'react-native-keyboard-controller';
 
 const App1 = () => {
   const {LightTheme, DarkTheme} = adaptNavigationTheme({
@@ -52,36 +53,38 @@ const App1 = () => {
               paperTheme.dark === true ? 'light-content' : 'dark-content'
             }
           />
-          <UserProvider>
-            <NavigationContainer
-              onReady={() => {
-                const currentRouteName =
-                  navigationRef.current.getCurrentRoute().name;
-                // Save the current route name for later comparision
-                routeNameRef.current = currentRouteName;
-              }}
-              onStateChange={async () => {
-                const previousRouteName = routeNameRef.current;
-                const currentRouteName =
-                  navigationRef.current.getCurrentRoute().name;
-                if (previousRouteName !== currentRouteName) {
-                  await analytics().logScreenView({
-                    screen_class: renameScreenName(currentRouteName),
-                    screen_name: currentRouteName,
-                  });
-                  crashlytics().log(
-                    `Screen Class: ${renameScreenName(currentRouteName)}`,
-                  );
-                }
+          <KeyboardProvider statusBarTranslucent>
+            <UserProvider>
+              <NavigationContainer
+                onReady={() => {
+                  const currentRouteName =
+                    navigationRef.current.getCurrentRoute().name;
+                  // Save the current route name for later comparision
+                  routeNameRef.current = currentRouteName;
+                }}
+                onStateChange={async () => {
+                  const previousRouteName = routeNameRef.current;
+                  const currentRouteName =
+                    navigationRef.current.getCurrentRoute().name;
+                  if (previousRouteName !== currentRouteName) {
+                    await analytics().logScreenView({
+                      screen_class: renameScreenName(currentRouteName),
+                      screen_name: currentRouteName,
+                    });
+                    crashlytics().log(
+                      `Screen Class: ${renameScreenName(currentRouteName)}`,
+                    );
+                  }
 
-                // Save the current route name for later comparision
-                routeNameRef.current = currentRouteName;
-              }}
-              ref={navigationRef}
-              theme={paperTheme}>
-              <App />
-            </NavigationContainer>
-          </UserProvider>
+                  // Save the current route name for later comparision
+                  routeNameRef.current = currentRouteName;
+                }}
+                ref={navigationRef}
+                theme={paperTheme}>
+                <App />
+              </NavigationContainer>
+            </UserProvider>
+          </KeyboardProvider>
           <Toast position="bottom" config={toastConfig} />
         </SafeAreaProvider>
       </ThemeProvider>
