@@ -35,7 +35,7 @@ axiosInstance.interceptors.request.use(
   error => {
     // Handle request errors
     if (axios.isAxiosError(error)) {
-      throw error.response?.data;
+      throw error.request?.data;
     } else if (error instanceof Error) {
       throw new Error(error.message);
     } else {
