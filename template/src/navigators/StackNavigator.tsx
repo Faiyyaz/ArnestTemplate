@@ -5,6 +5,7 @@ import RNPAppBar from '../components/appbar/RNPAppBar';
 import TabNavigator from './TabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
+import WebViewScreen from '../screens/WebViewScreen';
 
 const Stack = createNativeStackNavigator();
 const MyAppBar = (props: any) => <RNPAppBar {...props} />;
@@ -30,6 +31,13 @@ export default function StackNavigator() {
       <Stack.Screen
         name="ProductDetailScreen"
         component={ProductDetailScreen}
+      />
+      <Stack.Screen
+        name="WebViewScreen"
+        component={WebViewScreen}
+        options={{
+          headerTitle: '',
+        }}
       />
     </Stack.Navigator>
   );
